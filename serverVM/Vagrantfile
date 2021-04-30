@@ -6,18 +6,13 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 80, host: 8080                                     # Permite acceso público desde cualquier máquina
   # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"             Network configuration to disable public access
 
-  # Para crear una red privada que permita unicamente conexión host-only con la vm
-  # config.vm.network "private_network", ip: "192.168.33.10"
-
   # Establecer una carpeta compartida entre el repositorio y la maquina virtual
   # El primer argumento es la carpeta en el repo, el segundo argumento es la carpeta
   # dentro de la maquina virtual
-  config.vm.synced_folder "../sharedVM", "~/"
+  config.vm.synced_folder "../sharedVM", "/home/vagrant"
 
   # Para provisionar la maquina virtual
   config.vm.provider "virtualbox" do |vb|
-    # Habilitar la interfaz grafica
-    vb.gui = true
     # Establecer la RAM:
     vb.memory = "3072"
   end
@@ -30,6 +25,6 @@ Vagrant.configure("2") do |config|
   #     sudo systemctl disable firewalld
   #   SHELL
 
-  config.vm.provision :shell, path: "apacheServer.sh"
+  config.vm.provision "shell", path: "apacheServer.sh"
 
 end

@@ -1,23 +1,29 @@
 #!/usr/bin/env bash
 
-# Ingresar con privilegios root
-sudo -i
+# Actualizar el ubuntu
+do-release-upgrade
 
 # Instalar apache2
-sudo apt-get install apache2
+sudo apt-get -y install apache2
 
 # Brindar permisos al directorio www
 sudo chmod 0777 www -R
 
 # Establecer propietario
 usuario=`whoami`
-sed -i 's/${APACHE_RUN_USER}/'"$usuario"'/g' /etc/apache2/apache2.conf
-sed -i 's/${APACHE_RUN_GROUP}/'"$usuario"'/g' /etc/apache2/apache2.conf
-Systemctl restart apache2
+sudo sed -i 's/${APACHE_RUN_USER}/vagrant/g' /etc/apache2/apache2.conf
+sudo sed -i 's/${APACHE_RUN_GROUP}/vagrant/g' /etc/apache2/apache2.conf
+sudo Systemctl restart apache2
+
+# Ingresar con privilegios root
+sudo -i
 
 # Configuracion del servidor web
 # Crear carpeta contenedor
 mkdir /var/www/trabajoSO/
+
+# Crear carpeta contenedor para la prueba
+mkdir /var/www/pruebaPHP
 
 # Crear Index
 touch /var/www/pruebaPHP/index.php
@@ -39,8 +45,8 @@ trabajoSOconf
 # Activar configuración en el servidor
 a2ensite trabajoSO.conf
 a2dissite 000-default.conf
-systemctl reload apache2
+service apache2 reload
 
 # Añadir dominios en archivo hosts
-sed -i '3i 10.0.2.15       www.pruebaPHP.es' /etc/hosts
-sed -i '4i 10.0.2.15       www.trabajoSO.com' /etc/hosts
+sed -i '2i 10.0.2.15 www.pruebaPHP.es' /etc/hosts
+sed -i '3i 10.0.2.15 www.trabajoSO.com' /etc/hosts

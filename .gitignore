@@ -1,2 +1,4 @@
 /.idea
-/.vagrant
+/serverVM/.vagrant
+/sharedVM/.bash_history
+/sharedVM/.cache

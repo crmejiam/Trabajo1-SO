@@ -3,7 +3,7 @@ Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/trusty64"
 
   # Para configurar la disponibilidad de puertos para ingresar al server
-  config.vm.network "forwarded_port", guest: 80, host: 8080                                     # Permite acceso público desde cualquier máquina
+  config.vm.network "forwarded_port", guest: 80, host: 8080                                     # Permite acceso público desde cualquier máquina en la red local
   # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"             Network configuration to disable public access
 
   # Establecer una carpeta compartida entre el repositorio y la maquina virtual

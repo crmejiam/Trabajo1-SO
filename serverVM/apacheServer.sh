@@ -1,52 +1,36 @@
 #!/usr/bin/env bash
 
 # Actualizar el ubuntu
-do-release-upgrade
+# do-release-upgrade
 
-# Instalar apache2
-sudo apt-get -y install apache2
+# Instalar rar para poder extraer el archivo comprimido
+sudo apt install unrar
 
-# Brindar permisos al directorio www
-sudo chmod 0777 www -R
+# Instalar netstat
+sudo apt install -y net-tools
 
-# Establecer propietario
-usuario=`whoami`
-sudo sed -i 's/${APACHE_RUN_USER}/vagrant/g' /etc/apache2/apache2.conf
-sudo sed -i 's/${APACHE_RUN_GROUP}/vagrant/g' /etc/apache2/apache2.conf
-sudo Systemctl restart apache2
+# Para crear los usuarios necesarios
+useradd usuario1
+useradd usuario2
+useradd usuario3
+useradd usuario4
+useradd usuario5
+printf "passusuario1\npassusuario1" | sudo passwd usuario1
+printf "passusuario2\npassusuario2" | sudo passwd usuario2
+printf "passusuario3\npassusuario3" | sudo passwd usuario3
+printf "passusuario4\npassusuario4" | sudo passwd usuario4
+printf "passusuario5\npassusuario5" | sudo passwd usuario5
 
-# Ingresar con privilegios root
-sudo -i
+# Instalar Xampp
+if [ $(ls | grep xampp-linux-*-installer-run | wc -l) -e 0 ]; then
+wget https://www.apachefriends.org/xampp-files/7.3.28/xampp-linux-x64-7.3.28-0-installer.run
+fi
+chmod 755 ./xampp-linux-*-installer.run
+echo "y y \n y" | sudo ./xampp-linux-*-installer.run
 
-# Configuracion del servidor web
-# Crear carpeta contenedor
-mkdir /var/www/trabajoSO/
+# Añadir pagina web a la carpeta contenedor
+cp proyectoSO.rar /opt/lampp/htdocs
+unrar x /opt/lampp/htdocs/proyectoSO.rar /opt/lampp/htdocs
 
-# Crear carpeta contenedor para la prueba
-mkdir /var/www/pruebaPHP
-
-# Crear Index
-touch /var/www/pruebaPHP/index.php
-
-# Crear archivo de configuracion para apuntar al index
-touch /etc/apache2/sites-available/trabajoSO.conf
-
-# Editar archivo de configuración
-cat <<-'trabajoSOconf' > /etc/apache2/sites-available/trabajoSO.conf
-<VirtualHost *:80>
-        ServerName trabajoSO.com
-        ServerAdmin root@trabajoSO.com
-        ServerAlias www.trabajoSO.com
-        DocumentRoot /var/www/trabajoSO
-        DirectoryIndex index.php
-</VirtualHost>
-trabajoSOconf
-
-# Activar configuración en el servidor
-a2ensite trabajoSO.conf
-a2dissite 000-default.conf
-service apache2 reload
-
-# Añadir dominios en archivo hosts
-sed -i '2i 10.0.2.15 www.pruebaPHP.es' /etc/hosts
-sed -i '3i 10.0.2.15 www.trabajoSO.com' /etc/hosts
+# Iniciar Xampp
+sudo /opt/lampp/lampp startapache

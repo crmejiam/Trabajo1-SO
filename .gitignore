@@ -2,3 +2,4 @@
 /serverVM/.vagrant
 /sharedVM/.bash_history
 /sharedVM/.cache
+/sharedVM/xampp-linux-*-installer.run
